@@ -23,4 +23,8 @@ tags_metadata = [
         'name': 'category',
         'description': 'Операции с категориями',
     },
+    {
+        'name': 'admin',
+        'description': 'Операции администратора',
+    },
 ]

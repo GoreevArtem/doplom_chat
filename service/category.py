@@ -1,7 +1,5 @@
-from fastapi import Depends, HTTPException, status
-from sqlalchemy import and_
+from fastapi import Depends
 
-from database import models
 from database.db import SessionLocal, get_db, post_singleton
 from scheme.scheme import CategoryCreateModel, CategoryUpdateModel
 from service.get_user import GETUSER

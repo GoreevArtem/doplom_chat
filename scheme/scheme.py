@@ -15,6 +15,7 @@ class UserBaseSchema(OrmMode):
     name: Optional[str]
     email: EmailStr
     password: str
+    role: bool = False
 
 
 class CreateUserSchema(UserBaseSchema):
