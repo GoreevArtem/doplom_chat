@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict
 from fastapi import APIRouter, Depends, status
 from fastapi.encoders import jsonable_encoder
 from redis.commands.json.path import Path

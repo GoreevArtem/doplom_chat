@@ -1,4 +1,5 @@
 from fastapi import Depends, HTTPException, status
+from sqlalchemy import and_
 
 from database import models
 from database.db import SessionLocal, get_db
@@ -27,3 +28,7 @@ class GETUSER:
                 detail='Not authenticated',
                 headers={"WWW-Authenticate": "Bearer"},
             )
+
+    def _get_status(self):
+        if not self.session.query(models.User).filter(and_(models.User.role == True, models.User.id == self.user_id)).first():
+            raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Not admin")
