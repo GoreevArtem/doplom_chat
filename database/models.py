@@ -17,3 +17,5 @@ class User(Base):
                         nullable=False, server_default=text("now()"))
     updated_at = Column(TIMESTAMP(timezone=True),
                         nullable=False, server_default=text("now()"))
+    
+    role = Column(Boolean, default=False, nullable=False)

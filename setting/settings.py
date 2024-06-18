@@ -4,14 +4,14 @@ import dotenv
 dotenv.load_dotenv()
 
 class settings:
-    DB_HOST = os.environ.get("DB_HOST")
+    DB_HOST = os.environ.get("POSTGRES_HOST")
     DB_PORT = os.environ.get("POSTGRES_PORT", 5432)
     DB_NAME = os.environ.get("POSTGRES_DB")
     DB_USER = os.environ.get("POSTGRES_USER")
     DB_PASS = os.environ.get("POSTGRES_PASSWORD")
 
     REDIS_HOST = os.environ.get("REDIS_HOST")
-    REDIS_PORT = os.environ.get("REDIS_PORT")
+    REDIS_PORT = os.environ.get("REDIS_PORT", 6379)
 
     ACCESS_TOKEN_EXPIRES_IN = 2400
     REFRESH_TOKEN_EXPIRES_IN = 60
