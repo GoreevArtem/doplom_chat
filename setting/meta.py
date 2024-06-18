@@ -19,4 +19,8 @@ tags_metadata = [
         'name': 'images',
         'description': 'Операции с фотографиями',
     },
+    {
+        'name': 'category',
+        'description': 'Операции с категориями',
+    },
 ]
