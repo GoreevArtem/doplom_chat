@@ -3,7 +3,10 @@ from bson import ObjectId
 from fastapi.encoders import jsonable_encoder
 import pymongo
 
-from scheme.scheme import CategoryCreateModel, CategoryModel, CategoryUpdateModel, Post
+from scheme.scheme import CategoryCreateModel, CategoryModel, CategoryUpdateModel, Post, SearchRequest
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 class PostSingleton:
     _instance = None
@@ -104,3 +107,30 @@ class PostSingleton:
             return {"detail": "Category deleted"}
         
         raise HTTPException(status_code=404, detail="Category not found")
+    
+    def search_post(self, search_request: SearchRequest):
+        query = search_request.query
+
+        posts_list = [{**post, '_id': str(post['_id'])} for post in self.collection_posts.find()]
+        
+        if not posts_list:
+            raise HTTPException(status_code=404, detail="No posts found")
+
+        # Преобразование данных постов в список текстов
+        posts_content = [post["content"] for post in posts_list]
+
+        documents = posts_content + [query]
+
+        vectorizer = TfidfVectorizer()
+        tfidf_matrix = vectorizer.fit_transform(documents)
+
+        # Вычисление косинусного сходства между запросом и постами
+        cosine_sim = cosine_similarity(tfidf_matrix[-1], tfidf_matrix[:-1]).flatten()
+
+        # Получение индексов постов, отсортированных по схожести
+        similar_indices = cosine_sim.argsort()[::-1]
+
+        # Формирование результата поиска
+        similar_posts = [posts_list[i] for i in similar_indices]
+
+        return similar_posts

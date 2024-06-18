@@ -86,3 +86,7 @@ class CategoryCreateModel(BaseModel):
 class CategoryUpdateModel(BaseModel):
     name: str = None
     description: str = None
+
+
+class SearchRequest(BaseModel):
+    query: str
