@@ -36,11 +36,15 @@ class PostSingleton:
         return data
 
     def add_post(self, post_data):
+        if self.collection_posts.find_one({"name": post_data.title}) or self.collection_posts.find_one({"content": post_data.content}):
+            raise HTTPException(status.HTTP_409_CONFLICT, detail="post already exist")
+        
         result=self.collection_posts.insert_one(post_data.dict())
         if not result.acknowledged:
             raise HTTPException(status.HTTP_409_CONFLICT)
         return {"id": str(result.inserted_id)}
 
+    
     def delete_post(self, post_id: str):
         result = self.collection_posts.delete_one({"_id": ObjectId(post_id)})
         if result.deleted_count == 0:
@@ -52,6 +56,9 @@ class PostSingleton:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")
 
     def update_post(self, post_id: str, new_data: Post):
+        if self.collection_posts.find_one({"name": new_data.title}) or self.collection_posts.find_one({"content": new_data.content}):
+            raise HTTPException(status.HTTP_409_CONFLICT, detail="post already exist")
+        
         result = self.collection_posts.update_one({"_id": ObjectId(post_id)}, {"$set": new_data.dict()})
         if result.matched_count == 0:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Post not found")

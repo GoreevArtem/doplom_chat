@@ -12,7 +12,6 @@ router = APIRouter(
 @router.post(
     '/register',
     status_code=status.HTTP_201_CREATED,
-    response_model=scheme.UserResponseSchema
 )
 async def create_user(
         payload: scheme.CreateUserSchema,
