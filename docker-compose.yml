@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 
 services:
   api:
@@ -11,9 +11,10 @@ services:
     env_file: .env
     depends_on:
       - db
-      # - mongo
+      - mongo
     networks:
       - network
+      
   db:
     image: postgres
     container_name: postgres
@@ -27,15 +28,16 @@ services:
       - network
   
   nginx:
-    image: nginx
+    build: ./nginx
+    container_name: modsecurity-nginx
     ports:
       - "80:80"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     depends_on:
       - api
+    restart: always
     networks:
       - network
+
   redis:
     image: redis/redis-stack:latest
     container_name: redis
@@ -58,6 +60,10 @@ services:
 
   mongo:
     image: mongo
+    container_name: mongo
+    env_file:
+      - .env
+    restart: always
     ports:
       - "27017:27017"
     volumes:
