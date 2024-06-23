@@ -13,8 +13,7 @@ router = APIRouter(
 )
 
 
-@router.get('/me', dependencies=[Depends(JWTBearer())], status_code=status.HTTP_200_OK,
-            response_model=Optional[scheme.UserResponseSchema])
+@router.get('/me', dependencies=[Depends(JWTBearer())], status_code=status.HTTP_200_OK)
 def get_me(
         user_service: UserService = Depends()
 ):
