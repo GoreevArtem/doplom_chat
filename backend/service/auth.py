@@ -82,8 +82,13 @@ class AuthService:
             self,
             payload: scheme.LoginUserSchema,
     ) -> scheme.TokenSchema:
-        user = self.__get_user_by_email(payload)
-        self._not_user(user)
-        self._verify_password(payload, user)
-        access_token = self._create_token(user=user)
-        return scheme.TokenSchema(access_token=access_token)
+        try:
+            user = self.__get_user_by_email(payload)
+            self._not_user(user)
+            self._verify_password(payload, user)
+            access_token = self._create_token(user=user)
+            role = self.session.query(models.User).filter(
+                models.User.name == payload.name).first().__dict__["role"]
+            return scheme.TokenSchema(access_token=access_token, role = role)
+        except:
+            return {}

@@ -46,6 +46,7 @@ class UserResponseSchema(OrmMode):
 class TokenSchema(BaseModel):
     access_token: str
     token_type: str = 'bearer'
+    role: bool = False
     
     
 class Image(BaseModel):
