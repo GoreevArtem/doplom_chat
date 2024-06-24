@@ -82,13 +82,15 @@ class AuthService:
             self,
             payload: scheme.LoginUserSchema,
     ) -> scheme.TokenSchema:
-        try:
-            user = self.__get_user_by_email(payload)
-            self._not_user(user)
-            self._verify_password(payload, user)
-            access_token = self._create_token(user=user)
-            role = self.session.query(models.User).filter(
-                models.User.name == payload.name).first().__dict__["role"]
-            return scheme.TokenSchema(access_token=access_token, role = role)
-        except:
-            return {}
+        user = self.__get_user_by_email(payload)
+        self._not_user(user)
+        self._verify_password(payload, user)
+        access_token = self._create_token(user=user)
+        role = self.session.query(models.User).filter(
+            models.User.name == payload.name).first().__dict__["role"]
+        if not role:
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail='Role not found'
+            )
+        return scheme.TokenSchema(access_token=access_token, role = role)
